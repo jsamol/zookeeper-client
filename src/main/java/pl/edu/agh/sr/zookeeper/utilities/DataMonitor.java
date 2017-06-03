@@ -88,8 +88,7 @@ public class DataMonitor implements Watcher, AsyncCallback.StatCallback {
                     try {
                         int children = zooKeeper.getChildren(path, true, null).size();
                         if (children > getChildren()) {
-                            System.out.println(getChildren());
-                            System.out.printf("Current amount of %s znode children: %d\n", ZNODE, children);
+                            System.out.printf("Current number of %s znode children: %d\n", ZNODE, children);
                         }
                         setChildren(children);
                     } catch (KeeperException | InterruptedException e) {

@@ -19,6 +19,7 @@ public class TreePrinter {
         getPath("/");
         if (znodePath != null) {
             print(znodePath, 0);
+            System.out.println("");
         }
         else {
             System.out.println(ZNODE + " znode does not exist!");
@@ -33,7 +34,6 @@ public class TreePrinter {
         } catch (KeeperException | InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println();
     }
 
     private void getPath(String path) {
