@@ -27,8 +27,8 @@ hs_err_pid*
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff:
-.idea/**/workspace.xml
-.idea/**/tasks.xml
+.idea/workspace.xml
+.idea/tasks.xml
 .idea/dictionaries
 
 # Sensitive or high-churn files:
@@ -42,7 +42,7 @@ hs_err_pid*
 
 # Gradle:
 .idea/**/gradle.xml
-.idea/**/libraries
+.idea/libraries
 
 # Mongo Explorer plugin:
 .idea/**/mongoSettings.xml
@@ -66,4 +66,7 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+# My files
+*.sh
 
