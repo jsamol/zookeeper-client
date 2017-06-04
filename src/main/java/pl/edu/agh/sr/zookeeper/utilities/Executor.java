@@ -28,20 +28,34 @@ public class Executor implements Watcher, Runnable, DataMonitor.DataMonitorListe
 
     private static class StreamWriter extends Thread {
         private BufferedReader input;
+        private boolean inBackground;
 
         private StreamWriter(InputStream inputStream) {
             this.input = new BufferedReader(
                     new InputStreamReader(inputStream)
             );
+
+            this.inBackground = false;
         }
 
         @Override
         public void run() {
             while (true) {
+                while (inBackground) {
+                    try {
+                        synchronized (this) {
+                            wait();
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
                 try {
                     String line = input.readLine();
                     if (line != null) {
                         System.out.println(line);
+                        System.out.print("> ");
+                        System.out.flush();
                     }
                 } catch (IOException e) {
                     break;
@@ -56,7 +70,7 @@ public class Executor implements Watcher, Runnable, DataMonitor.DataMonitorListe
         synchronized (this) {
             while(dataMonitor.isAlive()) {
                 try {
-                    wait();
+                    this.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -73,6 +87,8 @@ public class Executor implements Watcher, Runnable, DataMonitor.DataMonitorListe
     public void onZnodeCreated() {
         if (process == null) {
             System.out.println("Starting process...");
+            System.out.print("> ");
+            System.out.flush();
             try {
                 process = Runtime.getRuntime().exec(exec);
                 streamWriter = new StreamWriter(process.getInputStream());
@@ -87,7 +103,11 @@ public class Executor implements Watcher, Runnable, DataMonitor.DataMonitorListe
     public void onZnodeDeleted() {
         if (process != null) {
             System.out.println("Stopping process...");
+            System.out.print("> ");
+            System.out.flush();
             process.destroy();
+            streamWriter.interrupt();
+            streamWriter = null;
             process = null;
         }
     }
@@ -99,8 +119,24 @@ public class Executor implements Watcher, Runnable, DataMonitor.DataMonitorListe
         }
     }
 
+    public void runInBackground() {
+        if (streamWriter != null) {
+            synchronized (streamWriter) {
+                streamWriter.inBackground = true;
+            }
+        }
+    }
+
+    public void runInForeground() {
+        if (streamWriter != null) {
+            synchronized (streamWriter) {
+                streamWriter.inBackground = false;
+                streamWriter.notifyAll();
+            }
+        }
+    }
+
     public TreePrinter getTreePrinter() {
         return treePrinter;
     }
-
 }

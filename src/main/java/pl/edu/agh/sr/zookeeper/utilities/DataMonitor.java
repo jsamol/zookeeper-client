@@ -70,7 +70,9 @@ public class DataMonitor implements Watcher, AsyncCallback.StatCallback {
             if (watchedEvent.getType() == Event.EventType.NodeCreated) {
                 zooKeeper.exists(path, true, null, null);
                 if (isRunning) {
-                    System.out.printf("%s znode has been already created!\n", ZNODE);
+                    System.err.printf("%s znode has been already created!\n", ZNODE);
+                    System.out.print("> ");
+                    System.out.flush();
                 }
                 else {
                     isRunning = true;
@@ -89,6 +91,8 @@ public class DataMonitor implements Watcher, AsyncCallback.StatCallback {
                         int children = zooKeeper.getChildren(path, true, null).size();
                         if (children > getChildren()) {
                             System.out.printf("Current number of %s znode children: %d\n", ZNODE, children);
+                            System.out.print("> ");
+                            System.out.flush();
                         }
                         setChildren(children);
                     } catch (KeeperException | InterruptedException e) {

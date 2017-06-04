@@ -20,9 +20,13 @@ public class TreePrinter {
         if (znodePath != null) {
             print(znodePath, 0);
             System.out.println("");
+            System.out.print("> ");
+            System.out.flush();
         }
         else {
-            System.out.println(ZNODE + " znode does not exist!");
+            System.err.println(ZNODE + " znode does not exist!");
+            System.out.print("> ");
+            System.out.flush();
         }
     }
 

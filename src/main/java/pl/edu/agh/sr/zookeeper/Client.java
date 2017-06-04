@@ -29,21 +29,35 @@ public class Client {
                 new InputStreamReader(System.in)
         );
 
+        printHelp();
         while(true) {
             try {
-                printHelp();
                 String command = input.readLine();
                 if ("quit".equals(command)) {
                     System.exit(0);
                 }
-                else if ("print_tree".equals(command)) {
+                else if ("tree".equals(command)) {
+                    System.out.print("> ");
+                    System.out.flush();
                     treePrinter.print();
+                }
+                else if ("bg".equals(command)) {
+                    System.out.print("> ");
+                    System.out.flush();
+                    executor.runInBackground();
+                }
+                else if ("fg".equals(command)) {
+                    System.out.print("> ");
+                    System.out.flush();
+                    executor.runInForeground();
                 }
                 else if ("help".equals(command)) {
                     printHelp();
                 }
                 else {
-                    System.out.println("Invalid command! Type 'help' to display all available commands.");
+                    System.err.println("Invalid command! Type 'help' to display all available commands.");
+                    System.out.print("> ");
+                    System.out.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -75,8 +89,10 @@ public class Client {
     private void printHelp() {
         System.out.printf(
                 "Available commands:\n" +
-                "print_tree\t-> prints the %s znode tree \n" +
-                "quit\t\t-> quit application\n\n", ZNODE
+                "tree\t-> prints the %s znode tree \n" +
+                "bg\t\t-> executes the external process in the background\n" +
+                "fg\t\t-> executes the external process in the foreground\n" +
+                "quit\t-> quit application\n\n", ZNODE
         );
         System.out.print("> ");
         System.out.flush();

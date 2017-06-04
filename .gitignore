@@ -69,4 +69,5 @@ fabric.properties
 
 # My files
 *.sh
+*.cmd
 
